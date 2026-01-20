@@ -560,6 +560,13 @@ function calculatePacing(xmlContent, targetTime, profile, prudence, checkpoints,
     const stepDistKm = stepLengthM / 1000;
     const stepAvgSpeed = stepDistKm > 0 ? (stepDistKm / (stepMovingSec / 3600)) : 0;
     
+    // Calcul de l'allure moyenne d'effort pour cette étape
+    // Formule : distance d'effort = distance + (D+ / 100) en km
+    const stepEffortDistanceKm = stepDistKm + (stepDPlus / 100);
+    const stepTotalSec = stepMovingSec + stopSec;
+    const stepAvgEffortPaceMinPerKm = stepEffortDistanceKm > 0 ? (stepTotalSec / 60) / stepEffortDistanceKm : 0;
+    const stepAvgEffortPace = formatPaceFromMinutes(stepAvgEffortPaceMinPerKm);
+    
     steps.push({
       index: i + 1,
       fromKm: fromKm,
@@ -574,7 +581,9 @@ function calculatePacing(xmlContent, targetTime, profile, prudence, checkpoints,
       totalSec: Math.round(stepMovingSec + stopSec),
       total: formatTime(stepMovingSec + stopSec),
       avgSpeedKmh: stepAvgSpeed,
-      avgPace: speedToPace(stepAvgSpeed)
+      avgPace: speedToPace(stepAvgSpeed),
+      avgEffortPace: stepAvgEffortPace,
+      effortDistanceKm: stepEffortDistanceKm
     });
   }
   
@@ -1048,6 +1057,10 @@ function displayResults(results) {
             <div class="total-item">
               <strong>Allure moyenne</strong>
               <span>${step.avgPace}/km</span>
+            </div>
+            <div class="total-item">
+              <strong>Allure moyenne d'effort</strong>
+              <span>${step.avgEffortPace}/km</span>
             </div>
           </div>
         </div>
