@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur d'Allure - Course à Pied</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkpoints-container {
+            border: 2px dashed #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+
+        .checkpoint-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .checkpoint-item input {
+            flex: 1;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+
+        .results {
+            margin-top: 40px;
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+        }
+
+        .results-content {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .totals {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .totals h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .totals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .total-item {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .total-item strong {
+            display: block;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .total-item span {
+            color: #667eea;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .steps {
+            margin-top: 30px;
+        }
+
+        .step {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .step-header {
+            color: #667eea;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .step-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .per-km {
+            margin-top: 30px;
+        }
+
+        .per-km h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .km-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .km-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .km-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .km-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .km-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .km-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .slope-plat {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .slope-montee-legere {
+            color: #ffc107;
+            font-weight: 600;
+        }
+
+        .slope-montee-moderee {
+            color: #fd7e14;
+            font-weight: 600;
+        }
+
+        .slope-montee-forte {
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .slope-montee-tres-forte {
+            color: #8b0000;
+            font-weight: 700;
+        }
+
+        .slope-descente-legere {
+            color: #17a2b8;
+            font-weight: 600;
+        }
+
+        .slope-descente-moderee {
+            color: #007bff;
+            font-weight: 600;
+        }
+
+        .slope-descente-forte {
+            color: #0056b3;
+            font-weight: 600;
+        }
+
+        .slope-descente-tres-forte {
+            color: #6f42c1;
+            font-weight: 600;
+        }
+
+        .slope-descente-extreme {
+            color: #5a32a3;
+            font-weight: 700;
+        }
+
+        .slope-descente-maximale {
+            color: #4a1d7a;
+            font-weight: 700;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .add-checkpoint-btn {
+            margin-top: 10px;
+        }
+
+        .saved-configs {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .saved-configs h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .config-actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .config-actions input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .configs-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .config-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .config-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .config-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .config-card .config-info {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .config-card .config-actions-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .config-card .config-actions-buttons button {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .checkpoint-item {
+                flex-direction: column;
+            }
+
+            .totals-grid,
+            .step-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏃 Calculateur d'Allure</h1>
+            <p>Calculez votre allure optimale pour votre course</p>
+        </header>
+
+        <div class="content">
+            <div class="saved-configs">
+                <h2>💾 Configurations sauvegardées</h2>
+                <div class="config-actions">
+                    <input type="text" id="configName" placeholder="Nom de la configuration (ex: UTMB 2024)" maxlength="50">
+                    <button type="button" id="saveConfigBtn" class="btn btn-success">Sauvegarder</button>
+                </div>
+                <div id="configsList" class="configs-list"></div>
+            </div>
+
+            <form id="calculatorForm">
+                <div class="form-section">
+                    <h2>📁 Fichier GPX</h2>
+                    <div class="form-group">
+                        <label for="gpxFile">Sélectionnez votre fichier GPX</label>
+                        <input type="file" id="gpxFile" accept=".gpx" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>⏱️ Objectif</h2>
+                    <div class="form-group">
+                        <label for="targetTime">Objectif de temps (HH:MM:SS ou HH:MM)</label>
+                        <input type="text" id="targetTime" value="18:00:00" placeholder="18:00:00" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>👤 Profil</h2>
+                    <div class="form-group">
+                        <label for="profile">Profil du coureur</label>
+                        <select id="profile">
+                            <option value="trained">Entraîné</option>
+                            <option value="standard">Standard</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="prudence">Facteur de prudence (0 = rapide, 1 = prudent)</label>
+                        <input type="number" id="prudence" value="0.5" min="0" max="1" step="0.1">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>🚰 Points de passage (Ravitaillements)</h2>
+                    <div id="checkpointsContainer" class="checkpoints-container">
+                        <div class="checkpoint-item">
+                            <input type="number" class="checkpoint-km" placeholder="Kilomètre" step="0.1" min="0">
+                            <input type="number" class="checkpoint-stop" placeholder="Arrêt (minutes)" step="1" min="0">
+                            <button type="button" class="btn btn-secondary remove-checkpoint">Supprimer</button>
+                        </div>
+                    </div>
+                    <button type="button" id="addCheckpoint" class="btn btn-secondary add-checkpoint-btn">+ Ajouter un point de passage</button>
+                </div>
+
+                <div class="form-section">
+                    <h2>😴 Repos</h2>
+                    <div class="form-group">
+                        <label for="restCount">Nombre de repos</label>
+                        <input type="number" id="restCount" value="1" min="0" step="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="restMinutes">Durée de chaque repos (minutes)</label>
+                        <input type="number" id="restMinutes" value="30" min="0" step="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn" id="calculateBtn">Calculer</button>
+                </div>
+            </form>
+
+            <div id="errorMessage" class="error" style="display: none;"></div>
+            <div id="loading" class="loading" style="display: none;">Calcul en cours...</div>
+
+            <div id="results" class="results">
+                <div class="results-header">
+                    <h2>📊 Résultats</h2>
+                </div>
+                <div class="results-content">
+                    <div id="totalsSection"></div>
+                    <div id="stepsSection"></div>
+                    <div id="perKmSection"></div>
+                    <div id="per250mSection"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script-browser.js"></script>
+</body>
+</html>
+
